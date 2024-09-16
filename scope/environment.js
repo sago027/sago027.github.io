@@ -8,9 +8,9 @@ class Environment{
         this.#simbols = new Map();
         this.#functions = new Map();
     }
-
+    
     add_symbol(symbol){
-        this.#simbols.set(simbol.id, symbol);
+        this.#simbols.set(symbol.id, symbol);
     }
 }
 
