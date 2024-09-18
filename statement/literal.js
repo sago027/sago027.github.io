@@ -23,11 +23,9 @@ class Literal extends Expression {
         temp.value = (temp.value == "true" ? true: false);
         break;
       case Type.IDENTIFIER:
-        // tiene que ir a buscar a la TS
         let symbol = env.buscar_variable(this.value);
         if(symbol === null) {
-          // agregar a la lista de errores
-          console.log('error semantico. la varialbe no existe');
+          console.log('no se encontró la variable');
           return;
         }
         temp.value = symbol.value.value;

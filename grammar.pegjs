@@ -27,7 +27,7 @@ statement
   / pr:print {return pr;}
 
 print 
-  = "System.out.println(" exp:expression ");" 
+  = "System.out.println(" _ exp:expression _ ");" 
   {
     const loc = location()?.start;
     return new Print(loc?.line, loc?.column, exp);
@@ -68,7 +68,7 @@ defaultStatement
 whileStatement
   = "while" _ "(" _ condition:expression _ ")" _ "{" _ body:statement_list _ "}" {
       const loc = location()?.start;
-      return new Wile(loc?.line, loc?.column, condition, body);
+      return new While(loc?.line, loc?.column, condition, body);
     }    
 
 
@@ -158,12 +158,12 @@ relExp
   / ae:arithmeticExp {return ae;}
 
 arithmeticExp
-  = pe:prodExp "+" ae:arithmeticExp{
+  = pe:prodExp _ "+" _ ae:arithmeticExp{
                                 const loc = location()?.start;
                                 return new Arithmetic(loc?.line, loc?.column, pe, ae, "+");
                               }
 
-/ pe:prodExp "-" ae:arithmeticExp{
+/ pe:prodExp _ "-" _ ae:arithmeticExp{
                                 const loc = location()?.start;
                                 return new Arithmetic(loc?.line, loc?.column, pe, ae, "-");
                               }
@@ -171,12 +171,12 @@ arithmeticExp
   / pe:prodExp {return pe;}
 
 prodExp
-  = fac:factor "*" pe:prodExp {
+  = fac:factor _ "*" _ pe:prodExp {
                                 const loc = location()?.start;
                                 return new Arithmetic(loc?.line, loc?.column, fac, pe, "*");
                               }
 
-  / fac:factor "/" pe:prodExp {
+  / fac:factor _ "/" _ pe:prodExp {
                                 const loc = location()?.start;
                                 return new Arithmetic(loc?.line, loc?.column, fac, pe, "/");
                               }
