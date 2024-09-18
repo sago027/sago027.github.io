@@ -24,11 +24,19 @@ statement
   / fc:function_call {return fc;}
   / ss:switch_statement {return ss;}
   / ws:whileStatement {return ws;}
+  / pr:print {return pr;}
+
+print 
+  = "System.out.println(" exp:expression ");" 
+  {
+    const loc = location()?.start;
+    return new Print(loc?.line, loc?.column, exp);
+  }
 
 if_else
   = "if" _ "(" _ condition:expression _ ")" _ then_branch:block _ else_branch:else_clause? {
       const loc = location()?.start;
-      return  new Condition(loc?.line, loc?.column,condition, block, else_branch);
+      return  new Condition(loc?.line, loc?.column,condition, then_branch, else_branch);
   }
 
 // Else (opcional, puede contener otro if_else de manera recursiva)
@@ -72,7 +80,10 @@ block
   }
 
 variable_assign 
-  = _ name:identifier _ value:assign _ ";"
+  = _ name:identifier _ value:assign _ ";" {
+                                              const loc = location()?.start;
+                                              return new Assign(loc?.line, loc?.column, name, value);
+                                              }
   / _ name:identifier "++" 
 
 // Ejemplo de declaración de variable
@@ -110,14 +121,39 @@ expression
 boolExp 
   = re:relExp _ "&&" _ be:boolExp{
                           const loc = location()?.start;
-                          return new Arithmetic(loc?.line, loc?.column, re, be, "&&");
+                          return new Logical(loc?.line, loc?.column, re, be, "&&");
                         }
+  / re:relExp _ "||" _ be:boolExp{
+                          const loc = location()?.start;
+                          return new Logical(loc?.line, loc?.column, re, be, "&&");
+                        }
+
   / re:relExp {return re;}
 
 relExp
   = ae:arithmeticExp _ ">" _ re:relExp {
                                 const loc = location()?.start;
-                                return new Arithmetic(loc?.line, loc?.column, ae, re, ">");
+                                return new Relational(loc?.line, loc?.column, ae, re, ">");
+                              }
+  / ae:arithmeticExp _ ">=" _ re:relExp {
+                                const loc = location()?.start;
+                                return new Relational(loc?.line, loc?.column, ae, re, ">=");
+                              }
+  / ae:arithmeticExp _ "<=" _ re:relExp {
+                                const loc = location()?.start;
+                                return new Relational(loc?.line, loc?.column, ae, re, "<=");
+                              }
+  / ae:arithmeticExp _ "==" _ re:relExp {
+                                const loc = location()?.start;
+                                return new Relational(loc?.line, loc?.column, ae, re, "==");
+                              }
+  / ae:arithmeticExp _ "!=" _ re:relExp {
+                                const loc = location()?.start;
+                                return new Relational(loc?.line, loc?.column, ae, re, "!=");
+                              }
+  / ae:arithmeticExp _ "<" _ re:relExp {
+                                const loc = location()?.start;
+                                return new Relational(loc?.line, loc?.column, ae, re, "<");
                               }
   / ae:arithmeticExp {return ae;}
 
@@ -126,6 +162,12 @@ arithmeticExp
                                 const loc = location()?.start;
                                 return new Arithmetic(loc?.line, loc?.column, pe, ae, "+");
                               }
+
+/ pe:prodExp "-" ae:arithmeticExp{
+                                const loc = location()?.start;
+                                return new Arithmetic(loc?.line, loc?.column, pe, ae, "-");
+                              }
+
   / pe:prodExp {return pe;}
 
 prodExp
@@ -133,12 +175,30 @@ prodExp
                                 const loc = location()?.start;
                                 return new Arithmetic(loc?.line, loc?.column, fac, pe, "*");
                               }
+
+  / fac:factor "/" pe:prodExp {
+                                const loc = location()?.start;
+                                return new Arithmetic(loc?.line, loc?.column, fac, pe, "/");
+                              }
   / fac:factor {return fac;} 
 
 factor 
-  = val:number {return val;}
-  / val:identifier {return val;}
+  = val:number {                                
+                  const loc = location()?.start;
+                  return new Literal(loc?.line, loc?.column, val, Type.INT);
+                }
+  / val:identifier {
+                    const loc = location()?.start;
+                    return new Literal(loc?.line, loc?.column, val, Type.IDENTIFIER);
+                    }
+
+  / val: string {
+                    const loc = location()?.start;
+                    return new Literal(loc?.line, loc?.column, val, Type.STRING);
+
+  }
   / "(" _ be:boolExp _ ")" {return be;}
+
 
 
 type="int" 
@@ -155,6 +215,12 @@ identifier
 // Números
 number
   = $([0-9]+) { return parseInt(text(), 10); }
+
+string 
+  = "\"" chars:[^\"]* "\"" _ 
+  {
+    return text();
+  }
 
 // Espacios en blanco
 _ "whitespace"

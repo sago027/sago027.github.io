@@ -1,5 +1,5 @@
 class Expression{
-    executeExpression(env) {}
+    execute(env) {}
 }
 
 export default Expression;

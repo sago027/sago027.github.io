@@ -9,6 +9,10 @@ class While extends Instruction{
         this.expression = expression;
         this.statements = statements;
     }
+
+    execute(env){
+        
+    }
 }
 
 export default While;

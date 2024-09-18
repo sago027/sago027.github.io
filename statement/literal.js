@@ -11,7 +11,7 @@ class Literal extends Expression {
   }
 
   execute(env) {
-    let temp = new Literal(line, column, value, type);
+    let temp = new Literal(this.line, this.column, this.value, this.type);
     switch(this.type) {
       case Type.STRING:
         temp.value = temp.value.toString();
@@ -20,7 +20,7 @@ class Literal extends Expression {
         temp.value = parseInt(temp.value, 10);
         break;
       case Type.BOOLEAN:
-        temp.value = (temp.value === "true" ? true: false);
+        temp.value = (temp.value == "true" ? true: false);
         break;
       case Type.IDENTIFIER:
         // tiene que ir a buscar a la TS
@@ -30,7 +30,7 @@ class Literal extends Expression {
           console.log('error semantico. la varialbe no existe');
           return;
         }
-        temp.value = symbol.value;
+        temp.value = symbol.value.value;
         temp.type = symbol.type;
         break;
     }

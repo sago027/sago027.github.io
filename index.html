@@ -13,6 +13,10 @@
           background-color: #333;
         }
         
+        .button{
+          background-color: #333;
+          font: white;
+        }
         .navbar a {
           float: left;
           font-size: 16px;
@@ -70,16 +74,24 @@
         </style>
         </head>
 <body  style="background-color:white;">
+  <pre id="file-content"></pre>
+
     <div class="container">
         <div class="navbar">
             <button id="btnCompile">Compile</button>
+            <input type="file" id="file-input" />
         </div>
         
         <h1>Código fuente</h1>
           <p><label for="source">Entrada:</label></p>
-          <textarea id="source" name="source" rows="50" cols="150"></textarea>
+          <textarea id="source" name="source" rows="20" cols="150"></textarea>
           <br>
-          <input type="submit" value="Submit">
+          <p><label for="consola">Consola:</label></p>
+          <textarea id="consola" name="consola" rows="20" cols="150"></textarea>
+          <br>
+          <p><label for="simbolos">Tabla de símbolos:</label></p>
+          <textarea id="simbolos" name="simbolos" rows="20" cols="150"></textarea>
+          <br>
     </div>
     <script type="module" src="interpreter.js"></script>
 </body>

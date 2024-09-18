@@ -8,6 +8,10 @@ class Switch extends Instruction{
         this.expression = expression;
         this.caseBlock = caseBlock;
     }
+
+    execute(env){
+        
+    }
 }
 
 export default Switch;

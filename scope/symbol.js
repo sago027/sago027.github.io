@@ -2,7 +2,7 @@ class Symbol
 {
     constructor(id, value, type)
     {
-        super();
+//        super();
         this.id = id;
         this.value = value;
         this.type = type;

@@ -1,4 +1,4 @@
 class Instruction{
-    executeInstruction(env){}    
+    execute(env){}    
 }
 export default Instruction;

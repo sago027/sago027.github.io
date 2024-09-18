@@ -9,3 +9,5 @@ import Logical from "./statement/logical.js";
 import Relational from "./statement/relational.js";
 import Condition from "./statement/condition.js";
 import Switch from "./statement/switch.js";
+import Literal from "./statement/literal.js";
+import Type from "./statement/type.js";

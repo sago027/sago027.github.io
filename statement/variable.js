@@ -11,7 +11,7 @@ class Variable extends Expression{
         this.id = id;
     }
 
-    executeExpression(env)
+    execute(env)
     {
         let variable =  new Variable(line, column, value, type, id);
         if(this.type == 1)
